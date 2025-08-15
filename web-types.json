@@ -1,0 +1,231 @@
+{
+  "framework": "vue",
+  "name": "suspended-ball-chat",
+  "version": "1.0.0",
+  "contributions": {
+    "html": {
+      "description-markup": "markdown",
+      "types-syntax": "typescript",
+      "tags": [
+        {
+          "name": "chat-panel",
+          "description": "",
+          "attributes": [
+            {
+              "name": "locales",
+              "value": {
+                "kind": "expression",
+                "type": "union"
+              },
+              "default": "'zh-CN'"
+            },
+            {
+              "name": "options",
+              "value": {
+                "kind": "expression",
+                "type": "TSTypeReference"
+              },
+              "default": "() => DEFAULT_DATE_TIME_FORMAT"
+            },
+            {
+              "name": "url",
+              "required": true,
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              }
+            },
+            {
+              "name": "appName",
+              "required": true,
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              }
+            },
+            {
+              "name": "domainName",
+              "required": true,
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              }
+            }
+          ],
+          "slots": [
+            {
+              "name": "default"
+            }
+          ],
+          "source": {
+            "module": "./components/chat-panel/ChatPanel.vue",
+            "symbol": "default"
+          }
+        },
+        {
+          "name": "chat-panel",
+          "description": "",
+          "attributes": [
+            {
+              "name": "locales",
+              "value": {
+                "kind": "expression",
+                "type": "union"
+              },
+              "default": "'zh-CN'"
+            },
+            {
+              "name": "options",
+              "value": {
+                "kind": "expression",
+                "type": "TSTypeReference"
+              },
+              "default": "() => DEFAULT_DATE_TIME_FORMAT"
+            },
+            {
+              "name": "url",
+              "required": true,
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              }
+            },
+            {
+              "name": "appName",
+              "required": true,
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              }
+            },
+            {
+              "name": "domainName",
+              "required": true,
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              }
+            }
+          ],
+          "slots": [
+            {
+              "name": "default"
+            }
+          ],
+          "source": {
+            "module": "./components/chat-panel/index.ts",
+            "symbol": "ChatPanel"
+          }
+        },
+        {
+          "name": "components",
+          "description": "",
+          "source": {
+            "module": "./components/index.ts",
+            "symbol": "default"
+          }
+        },
+        {
+          "name": "suspended-ball-chat",
+          "description": "",
+          "attributes": [
+            {
+              "name": "locales",
+              "value": {
+                "kind": "expression",
+                "type": "union"
+              },
+              "default": "'zh-CN'"
+            },
+            {
+              "name": "options",
+              "value": {
+                "kind": "expression",
+                "type": "TSTypeReference"
+              },
+              "default": "() => DEFAULT_DATE_TIME_FORMAT"
+            },
+            {
+              "name": "url",
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              },
+              "default": "'/nlweb/query'"
+            },
+            {
+              "name": "appName",
+              "required": true,
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              }
+            },
+            {
+              "name": "domainName",
+              "required": true,
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              }
+            }
+          ],
+          "source": {
+            "module": "./components/suspended-ball-chat/SuspendedBallChat.vue",
+            "symbol": "default"
+          }
+        },
+        {
+          "name": "suspended-ball-chat",
+          "description": "",
+          "attributes": [
+            {
+              "name": "locales",
+              "value": {
+                "kind": "expression",
+                "type": "union"
+              },
+              "default": "'zh-CN'"
+            },
+            {
+              "name": "options",
+              "value": {
+                "kind": "expression",
+                "type": "TSTypeReference"
+              },
+              "default": "() => DEFAULT_DATE_TIME_FORMAT"
+            },
+            {
+              "name": "url",
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              },
+              "default": "'/nlweb/query'"
+            },
+            {
+              "name": "appName",
+              "required": true,
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              }
+            },
+            {
+              "name": "domainName",
+              "required": true,
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              }
+            }
+          ],
+          "source": {
+            "module": "./components/suspended-ball-chat/index.ts",
+            "symbol": "SuspendedBallChat"
+          }
+        }
+      ]
+    }
+  }
+}

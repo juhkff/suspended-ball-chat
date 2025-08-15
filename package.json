@@ -1,0 +1,73 @@
+{
+  "name": "suspended-ball-chat",
+  "version": "1.0.0",
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "webpack",
+    "build:components": "webpack --config webpack.components.config.js",
+    "generate-web-types": "vue-docgen-web-types components/**/*.{vue,js,ts} --outDir lib --output web-types.json",
+    "mock-server": "node ./src/mock/mock-server.ts",
+    "package": "rimraf ./lib && npm run build && npm run build:components && npm run generate-web-types"
+  },
+  "description": "一个悬浮球AI助手组件库",
+  "main": "lib/index.js",
+  "types": "types/index.d.ts",
+  "web-types": "web-types.json",
+  "files": [
+    "lib",
+    "components",
+    "src",
+    "types",
+    "web-types.json"
+  ],
+  "exports": {
+    ".": "./lib/index.js",
+    "./components": "./components",
+    "./components/*": "./lib/components/*"
+  },
+  "keywords": [
+    "vue",
+    "chat",
+    "components"
+  ],
+  "author": "juhkff",
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "showdown": "^2.1.0",
+    "showdown-katex": "^0.8.0",
+    "showdown-prettify": "^1.3.0",
+    "vue": "^2.7.16",
+    "vue-class-component": "^7.2.3",
+    "vue-property-decorator": "^9.1.2",
+    "vuex": "^3.6.2"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.18.6",
+    "@babel/plugin-proposal-decorators": "^7.28.0",
+    "@types/cors": "^2.8.19",
+    "@types/lodash": "^4.17.20",
+    "@types/showdown": "^2.0.6",
+    "@vue/cli-plugin-typescript": "~5.0.0",
+    "@vue/cli-plugin-vuex": "~5.0.0",
+    "@vue/cli-service": "~5.0.0",
+    "cors": "^2.8.5",
+    "css-loader": "^7.1.2",
+    "file-loader": "^6.2.0",
+    "json-server": "1.0.0-beta.3",
+    "rimraf": "^6.0.1",
+    "style-loader": "^4.0.0",
+    "ts-loader": "^9.5.2",
+    "typescript": "~5.9.2",
+    "url-loader": "^4.1.1",
+    "vue-docgen-web-types": "^0.1.8",
+    "vue-loader": "15",
+    "vue-style-loader": "^4.1.3",
+    "vue-template-compiler": "^2.7.16",
+    "webpack": "^5.101.0",
+    "webpack-cli": "^6.0.1"
+  },
+  "peerDependencies": {
+    "element-ui": "^2.12.0"
+  }
+}
