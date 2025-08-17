@@ -89,7 +89,7 @@ export default class ChatPanel extends Vue {
   }
 
   private sendChatMessage() {
-    if (this.locked) {
+    if (this.locked || this.inputValue.trim() === '') {
       return;
     }
     this.locked = true;
@@ -352,6 +352,7 @@ export default class ChatPanel extends Vue {
   padding: 0;
   text-align: left;
   text-indent: 0;
+  overflow: auto;
 }
 
 .message-content >>> p {
@@ -363,6 +364,10 @@ export default class ChatPanel extends Vue {
 .message-content.wait,
 .message-content.error {
   color: white;
+}
+
+.message-content.wait {
+  height: 20px; /* 防止图标大小变动导致出现滚动条 */
 }
 
 .message-content.wait p {

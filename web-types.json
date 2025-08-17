@@ -130,12 +130,44 @@
           "description": "",
           "attributes": [
             {
-              "name": "locales",
+              "name": "radius",
+              "value": {
+                "kind": "expression",
+                "type": "number"
+              },
+              "default": "25"
+            },
+            {
+              "name": "panelWidth",
+              "value": {
+                "kind": "expression",
+                "type": "number"
+              },
+              "default": "350"
+            },
+            {
+              "name": "panelHeight",
+              "value": {
+                "kind": "expression",
+                "type": "number"
+              },
+              "default": "500"
+            },
+            {
+              "name": "dateLocales",
               "value": {
                 "kind": "expression",
                 "type": "union"
               },
               "default": "'zh-CN'"
+            },
+            {
+              "name": "location",
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              },
+              "default": "'right-bottom'"
             },
             {
               "name": "options",
@@ -180,12 +212,44 @@
           "description": "",
           "attributes": [
             {
-              "name": "locales",
+              "name": "radius",
+              "value": {
+                "kind": "expression",
+                "type": "number"
+              },
+              "default": "25"
+            },
+            {
+              "name": "panelWidth",
+              "value": {
+                "kind": "expression",
+                "type": "number"
+              },
+              "default": "350"
+            },
+            {
+              "name": "panelHeight",
+              "value": {
+                "kind": "expression",
+                "type": "number"
+              },
+              "default": "500"
+            },
+            {
+              "name": "dateLocales",
               "value": {
                 "kind": "expression",
                 "type": "union"
               },
               "default": "'zh-CN'"
+            },
+            {
+              "name": "location",
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              },
+              "default": "'right-bottom'"
             },
             {
               "name": "options",

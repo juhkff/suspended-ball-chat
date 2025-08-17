@@ -7,14 +7,15 @@ export declare class SuspendedBallChat extends Vue {
     private isDragging: boolean;
     private startX: number;
     private startY: number;
-    private offsetX: number;
-    private offsetY: number;
-    private isMenuVisible: boolean;
-    private menuLeft: number;
-    private menuTop: number;
-    private clickThreshold: number;
-    private menuWidth: number;
-    private menuHeight: number;
+    private startPositionX: number;
+    private startPositionY: number;
+    private isPanelVisible: boolean;
+    private panelLeft: number;
+    private panelTop: number;
+    private panelWidth: number;
+    private panelHeight: number;
+    private margin: number;
+    private moveThreshold: number;
     private minEdgeDistance: number;
 
     // Methods
@@ -24,9 +25,9 @@ export declare class SuspendedBallChat extends Vue {
 
     private handleMouseUp(): void;
 
-    private toggleMenu(): void;
+    private togglePanel(): void;
 
-    private updateMenuPosition(): void;
+    private updatePanelPosition(): void;
 
     // Refs
     $refs: {
