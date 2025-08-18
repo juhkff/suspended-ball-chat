@@ -72,7 +72,7 @@ export default class SuspendBallChat extends Vue {
   private currentPanelHeight: number = 500;
   private readonly margin: number = 10;  // 悬浮球和页面之间的距离
   private readonly moveThreshold: number = 5; // 拖拽距离阈值，超过此值判断为拖拽而非点击
-  private readonly minEdgeDistance: number = 10; // 距离边缘最小距离
+  private readonly minEdgeDistance: number = 20; // 距离边缘最小距离
   // 默认悬浮球在右边，菜单显示在左边
   private calculatePanelPosition: Function = () => {
     this.panelLeft = this.ballLeft - this.margin - this.currentPanelWidth;

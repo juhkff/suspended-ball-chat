@@ -1,5 +1,5 @@
 const path = require('path');
-const { VueLoaderPlugin } = require("vue-loader");
+const {VueLoaderPlugin} = require("vue-loader");
 
 module.exports = {
     mode: 'none',
@@ -13,14 +13,53 @@ module.exports = {
         filename: 'components/[name]/index.js',  // 输出文件名
         library: '[name]', // 组件库名称
         libraryTarget: 'umd',  //模块化格式
-        umdNamedDefine: true
+        umdNamedDefine: true,
+        globalObject: 'typeof self !== \'undefined\' ? self : this'
     },
     externals: {
-        vue: {  //将vue依赖 "外部化"，不打包进组件库
+        //将vue依赖 "外部化"，不打包进组件库
+        vue: {
             root: 'Vue',
             commonjs: 'vue',
             commonjs2: 'vue',
             amd: 'vue'
+        },
+        // 状态管理
+        vuex: {
+            root: 'Vuex',
+            commonjs: 'vuex',
+            commonjs2: 'vuex',
+            amd: 'vuex'
+        },
+        'vue-class-component': {
+            root: 'VueClassComponent',
+            commonjs: 'vue-class-component',
+            commonjs2: 'vue-class-component',
+            amd: 'vue-class-component'
+        },
+        'vue-property-decorator': {
+            root: 'VuePropertyDecorator',
+            commonjs: 'vue-property-decorator',
+            commonjs2: 'vue-property-decorator',
+            amd: 'vue-property-decorator'
+        },
+        lodash: {
+            root: '_',
+            commonjs: 'lodash',
+            commonjs2: 'lodash',
+            amd: 'lodash'
+        },
+        showdown: {
+            root: 'showdown',
+            commonjs: 'showdown',
+            commonjs2: 'showdown',
+            amd: 'showdown'
+        },
+        'element-ui': {
+            root: 'ELEMENT',
+            commonjs: 'element-ui',
+            commonjs2: 'element-ui',
+            amd: 'element-ui'
         }
     },
     module: {
@@ -76,6 +115,9 @@ module.exports = {
         alias: {
             '@': path.resolve(__dirname, 'src')
         }
+    },
+    optimization: {
+        minimize: true
     },
     plugins: [
         new VueLoaderPlugin()
