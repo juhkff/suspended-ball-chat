@@ -58,6 +58,7 @@ export default class SuspendBallChat extends Vue {
   @Prop({type: String, required: true}) readonly appName!: string;
   @Prop({type: String, required: true}) readonly domainName!: string;
 
+  private eventListeners: Array<[EventTarget, string, EventListenerOrEventListenerObject]> = [];
   private ballLeft: number = window.innerWidth - this.radius * 2; // 初始位置
   private ballTop: number = window.innerHeight - this.radius * 2;
   private isDragging: boolean = false;
@@ -84,6 +85,26 @@ export default class SuspendBallChat extends Vue {
   }
   private panelStartWidth: number = 0;
   private panelStartHeight: number = 0;
+
+  constructor() {
+    super();
+    this.resizePanelTop = this.resizePanelTop.bind(this);
+    this.stopPanelResizeTop = this.stopPanelResizeTop.bind(this);
+    this.resizePanelBottom = this.resizePanelBottom.bind(this);
+    this.stopPanelResizeBottom = this.stopPanelResizeBottom.bind(this);
+    this.resizePanelLeft = this.resizePanelLeft.bind(this);
+    this.stopPanelResizeLeft = this.stopPanelResizeLeft.bind(this);
+    this.resizePanelRight = this.resizePanelRight.bind(this);
+    this.stopPanelResizeRight = this.stopPanelResizeRight.bind(this);
+    this.resizePanelTopLeft = this.resizePanelTopLeft.bind(this);
+    this.stopPanelResizeTopLeft = this.stopPanelResizeTopLeft.bind(this);
+    this.resizePanelTopRight = this.resizePanelTopRight.bind(this);
+    this.stopPanelResizeTopRight = this.stopPanelResizeTopRight.bind(this);
+    this.resizePanelBottomLeft = this.resizePanelBottomLeft.bind(this);
+    this.stopPanelResizeBottomLeft = this.stopPanelResizeBottomLeft.bind(this);
+    this.resizePanelBottomRight = this.resizePanelBottomRight.bind(this);
+    this.stopPanelResizeBottomRight = this.stopPanelResizeBottomRight.bind(this);
+  }
 
   mounted() {
     switch (this.location) {
@@ -116,10 +137,39 @@ export default class SuspendBallChat extends Vue {
     this.currentPanelHeight = this.panelHeight;
     window.addEventListener("resize", this.handleWindowResize);
     this.handleWindowResize();
+    // 全局兜底
+    document.addEventListener("mouseleave", this.removeAllEvents);
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        this.removeAllEvents();
+      }
+    });
+  }
+
+  private addEvent<K extends keyof DocumentEventMap>(el: Document, type: K, handler: (this: Document, ev: DocumentEventMap[K]) => any) {
+    el.addEventListener(type, handler);
+    this.eventListeners.push([el, type, handler as EventListener]);
+  }
+
+  private removeEvent<K extends keyof DocumentEventMap>(el: Document, type: K, handler: (this: Document, ev: DocumentEventMap[K]) => any) {
+    el.removeEventListener(type, handler);
+    this.eventListeners = this.eventListeners.filter(
+        ([_el, _type, _handler]) => !(_el === el && _type === type && _handler === handler)
+    );
+  }
+
+  private removeAllEvents() {
+    this.eventListeners.forEach(([el, type, handler]) => {
+      el.removeEventListener(type, handler);
+    });
+    this.eventListeners = [];
   }
 
   beforeDestroy() {
     window.removeEventListener("resize", this.handleWindowResize);
+    document.removeEventListener("mouseleave", this.removeAllEvents);
+    document.removeEventListener("visibilitychange", this.removeAllEvents);
+    this.removeAllEvents();
   }
 
   private resizeTop(event: MouseEvent): void {
@@ -128,8 +178,8 @@ export default class SuspendBallChat extends Vue {
     this.mouseStartY = event.clientY
     this.panelStartHeight = this.currentPanelHeight
 
-    document.addEventListener('mousemove', this.resizePanelTop);
-    document.addEventListener('mouseup', this.stopPanelResizeTop);
+    this.addEvent(document, "mousemove", this.resizePanelTop);
+    this.addEvent(document, "mouseup", this.stopPanelResizeTop);
   }
 
   private resizeBottom(event: MouseEvent): void {
@@ -138,8 +188,8 @@ export default class SuspendBallChat extends Vue {
     this.mouseStartY = event.clientY
     this.panelStartHeight = this.currentPanelHeight
 
-    document.addEventListener('mousemove', this.resizePanelBottom);
-    document.addEventListener('mouseup', this.stopPanelResizeBottom);
+    this.addEvent(document, "mousemove", this.resizePanelBottom);
+    this.addEvent(document, "mouseup", this.stopPanelResizeBottom);
   }
 
   private resizeLeft(event: MouseEvent): void {
@@ -148,8 +198,8 @@ export default class SuspendBallChat extends Vue {
     this.mouseStartX = event.clientX
     this.panelStartWidth = this.currentPanelWidth
 
-    document.addEventListener('mousemove', this.resizePanelLeft);
-    document.addEventListener('mouseup', this.stopPanelResizeLeft);
+    this.addEvent(document, 'mousemove', this.resizePanelLeft);
+    this.addEvent(document, 'mouseup', this.stopPanelResizeLeft);
   }
 
   private resizeRight(event: MouseEvent): void {
@@ -158,8 +208,8 @@ export default class SuspendBallChat extends Vue {
     this.mouseStartX = event.clientX
     this.panelStartWidth = this.currentPanelWidth
 
-    document.addEventListener('mousemove', this.resizePanelRight);
-    document.addEventListener('mouseup', this.stopPanelResizeRight);
+    this.addEvent(document, 'mousemove', this.resizePanelRight);
+    this.addEvent(document, 'mouseup', this.stopPanelResizeRight);
   }
 
   private resizeTopLeft(event: MouseEvent): void {
@@ -170,8 +220,8 @@ export default class SuspendBallChat extends Vue {
     this.panelStartWidth = this.currentPanelWidth;
     this.panelStartHeight = this.currentPanelHeight;
 
-    document.addEventListener('mousemove', this.resizePanelTopLeft);
-    document.addEventListener('mouseup', this.stopPanelResizeTopLeft);
+    this.addEvent(document, 'mousemove', this.resizePanelTopLeft);
+    this.addEvent(document, 'mouseup', this.stopPanelResizeTopLeft);
   }
 
   private resizeTopRight(event: MouseEvent): void {
@@ -182,8 +232,8 @@ export default class SuspendBallChat extends Vue {
     this.panelStartWidth = this.currentPanelWidth;
     this.panelStartHeight = this.currentPanelHeight;
 
-    document.addEventListener('mousemove', this.resizePanelTopRight);
-    document.addEventListener('mouseup', this.stopPanelResizeTopRight);
+    this.addEvent(document, 'mousemove', this.resizePanelTopRight);
+    this.addEvent(document, 'mouseup', this.stopPanelResizeTopRight);
   }
 
   private resizeBottomLeft(event: MouseEvent): void {
@@ -194,8 +244,8 @@ export default class SuspendBallChat extends Vue {
     this.panelStartWidth = this.currentPanelWidth;
     this.panelStartHeight = this.currentPanelHeight;
 
-    document.addEventListener('mousemove', this.resizePanelBottomLeft);
-    document.addEventListener('mouseup', this.stopPanelResizeBottomLeft);
+    this.addEvent(document, 'mousemove', this.resizePanelBottomLeft);
+    this.addEvent(document, 'mouseup', this.stopPanelResizeBottomLeft);
   }
 
   private resizeBottomRight(event: MouseEvent): void {
@@ -206,8 +256,8 @@ export default class SuspendBallChat extends Vue {
     this.panelStartWidth = this.currentPanelWidth;
     this.panelStartHeight = this.currentPanelHeight;
 
-    document.addEventListener('mousemove', this.resizePanelBottomRight);
-    document.addEventListener('mouseup', this.stopPanelResizeBottomRight);
+    this.addEvent(document, 'mousemove', this.resizePanelBottomRight);
+    this.addEvent(document, 'mouseup', this.stopPanelResizeBottomRight);
   }
 
   private resizePanelTop(event: MouseEvent): void {
@@ -257,43 +307,43 @@ export default class SuspendBallChat extends Vue {
   }
 
   private stopPanelResizeTop(): void {
-    document.removeEventListener('mousemove', this.resizePanelTop);
-    document.removeEventListener('mouseup', this.stopPanelResizeTop);
+    this.removeEvent(document, 'mousemove', this.resizePanelTop);
+    this.removeEvent(document, 'mouseup', this.stopPanelResizeTop);
   }
 
   private stopPanelResizeBottom(): void {
-    document.removeEventListener('mousemove', this.resizePanelBottom);
-    document.removeEventListener('mouseup', this.stopPanelResizeBottom);
+    this.removeEvent(document, 'mousemove', this.resizePanelBottom);
+    this.removeEvent(document, 'mouseup', this.stopPanelResizeBottom);
   }
 
   private stopPanelResizeLeft(): void {
-    document.removeEventListener('mousemove', this.resizePanelLeft);
-    document.removeEventListener('mouseup', this.stopPanelResizeLeft);
+    this.removeEvent(document, 'mousemove', this.resizePanelLeft);
+    this.removeEvent(document, 'mouseup', this.stopPanelResizeLeft);
   }
 
   private stopPanelResizeRight(): void {
-    document.removeEventListener('mousemove', this.resizePanelRight);
-    document.removeEventListener('mouseup', this.stopPanelResizeRight);
+    this.removeEvent(document, 'mousemove', this.resizePanelRight);
+    this.removeEvent(document, 'mouseup', this.stopPanelResizeRight);
   }
 
   private stopPanelResizeTopLeft(): void {
-    document.removeEventListener('mousemove', this.resizePanelTopLeft);
-    document.removeEventListener('mouseup', this.stopPanelResizeTopLeft);
+    this.removeEvent(document, 'mousemove', this.resizePanelTopLeft);
+    this.removeEvent(document, 'mouseup', this.stopPanelResizeTopLeft);
   }
 
   private stopPanelResizeTopRight(): void {
-    document.removeEventListener('mousemove', this.resizePanelTopRight);
-    document.removeEventListener('mouseup', this.stopPanelResizeTopRight);
+    this.removeEvent(document, 'mousemove', this.resizePanelTopRight);
+    this.removeEvent(document, 'mouseup', this.stopPanelResizeTopRight);
   }
 
   private stopPanelResizeBottomLeft(): void {
-    document.removeEventListener('mousemove', this.resizePanelBottomLeft);
-    document.removeEventListener('mouseup', this.stopPanelResizeBottomLeft);
+    this.removeEvent(document, 'mousemove', this.resizePanelBottomLeft);
+    this.removeEvent(document, 'mouseup', this.stopPanelResizeBottomLeft);
   }
 
   private stopPanelResizeBottomRight(): void {
-    document.removeEventListener('mousemove', this.resizePanelBottomRight);
-    document.removeEventListener('mouseup', this.stopPanelResizeBottomRight);
+    this.removeEvent(document, 'mousemove', this.resizePanelBottomRight);
+    this.removeEvent(document, 'mouseup', this.stopPanelResizeBottomRight);
   }
 
   private handleWindowResize(): void {
@@ -321,8 +371,8 @@ export default class SuspendBallChat extends Vue {
     this.mouseStartY = event.clientY;
     this.startPositionX = this.ballLeft;
     this.startPositionY = this.ballTop;
-    document.addEventListener("mousemove", this.handleMouseMove);
-    document.addEventListener("mouseup", this.handleMouseUp);
+    this.addEvent(document, "mousemove", this.handleMouseMove);
+    this.addEvent(document, "mouseup", this.handleMouseUp);
     // 拖动时移除过渡效果
     const ball = this.$refs.suspendedBall as HTMLElement;
     ball.style.transition = "none";
@@ -358,8 +408,8 @@ export default class SuspendBallChat extends Vue {
   }
 
   handleMouseUp() {
-    document.removeEventListener("mousemove", this.handleMouseMove);
-    document.removeEventListener("mouseup", this.handleMouseUp);
+    this.removeEvent(document, "mousemove", this.handleMouseMove);
+    this.removeEvent(document, "mouseup", this.handleMouseUp)
     if (!this.isDragging) {
       this.toggleMenu();
     }
@@ -368,7 +418,7 @@ export default class SuspendBallChat extends Vue {
 
     // 添加过渡效果
     const ball = this.$refs.suspendedBall as HTMLElement;
-    ball.style.transition = "left 0.3s ease";
+    ball.style.transition = "left 0.3s ease, top 0.3s ease";
     this.ballLeft = targetLeft;
 
     // 吸壁后更新菜单位置
