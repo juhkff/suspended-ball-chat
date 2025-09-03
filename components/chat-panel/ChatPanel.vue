@@ -15,6 +15,7 @@ import {
   Col,
 } from 'element-ui';
 import {ChatMessage} from 'types';
+import {Role} from "../../types/common";
 // 按需导入样式
 import 'element-ui/lib/theme-chalk/button.css';
 import 'element-ui/lib/theme-chalk/card.css';
@@ -43,6 +44,8 @@ export default class ChatPanel extends Vue {
   @Prop({type: String, required: true}) readonly url!: string;
   @Prop({type: String, required: true}) readonly appName!: string;
   @Prop({type: String, required: true}) readonly domainName!: string;
+  // 控制用户信息显示在左边还是右边
+  @Prop({type: Boolean, default: false}) readonly isLeft!: boolean;
 
   constructor() {
     super();
@@ -51,10 +54,13 @@ export default class ChatPanel extends Vue {
     this.converter.setOption('openLinksInNewWindow', true);
     this.fetchPromise = null;
     this.controller = null;
+  }
+
+  private mounted() {
     if (this.uiHistory.length === 0) {
       this.uiHistory.push({
         role: 'assistant',
-        content: this.converter.makeHtml('你好，欢迎使用聊天机器人！请问有什么我可以帮助你的吗？'),
+        content: this.locales === 'zh-CN' ? this.converter.makeHtml('你好，欢迎使用聊天机器人！请问有什么我可以帮助你的吗？') : this.converter.makeHtml('Hello, welcome to the chatbot! How can I help you?'),
         timestamp: Date.now()
       });
     }
@@ -203,17 +209,96 @@ export default class ChatPanel extends Vue {
     });
     event.preventDefault();
   }
+
+  private async copyToClipboard(text: string) {
+    try {
+      // 首先尝试使用现代剪贴板API
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        // 降级到传统方法
+        this.fallbackCopyTextToClipboard(text);
+      }
+    } catch (err) {
+      console.error('Modern copy error:', err);
+      // 出错时也尝试降级方法
+      this.fallbackCopyTextToClipboard(text);
+    }
+  }
+
+  // 传统复制方法
+  private fallbackCopyTextToClipboard(text: string) {
+    try {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+
+      // 避免滚动到底部
+      textArea.style.top = "0";
+      textArea.style.left = "0";
+      textArea.style.position = "fixed";
+      textArea.style.opacity = "0";
+
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+
+      const successful = document.execCommand('copy');
+      document.body.removeChild(textArea);
+
+      if (!successful) {
+        console.error('Fallback copy failed');
+      }
+    } catch (err) {
+      console.error('Fallback copy error:', err);
+    }
+  }
+
+  // 添加一个辅助方法来提取纯文本
+  private extractTextFromHtml(html: string): string {
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || '';
+  }
+
+  private computePosition(element: string, role: Role): string {
+    if (element === 'card-col' || element === 'card-panel-timestamp') {
+      if (this.isLeft) {
+        return role === 'user' ? 'justify-content: flex-start;' : 'justify-content: flex-end;';
+      } else {
+        return role === 'user' ? 'justify-content: flex-end;' : 'justify-content: flex-start;';
+      }
+    } else if (element === 'message-card') {
+      if (this.isLeft) {
+        return role === 'user' ? 'margin-right: 5%;' : 'margin-left: 5%;';
+      } else {
+        return role === 'user' ? 'margin-left: 5%;' : 'margin-right: 5%;';
+      }
+    } else {
+      return '';
+    }
+  }
 }
 </script>
 
 <template>
-  <div>
-    <el-row style="display: flex; flex-direction: column;">
-      <el-col v-for="(item, index) in this.uiHistory" :key="index" :class="`card-col ${item.role}`">
-        <el-card :class="`message-card ${item.role}`">
+  <div class="chat-container">
+    <el-row class="messages-container">
+      <el-col v-for="(item, index) in this.uiHistory" :key="index" :class="`card-col ${item.role}`"
+              :style="computePosition('card-col', item.role)">
+        <el-card :class="`message-card ${item.role}`" :style="computePosition('message-card', item.role)">
           <el-row v-if="item.role !== 'wait' && item.role !== 'error'"
-                  v-text="new Date(item.timestamp).toLocaleString(locales, options)"
-                  :class="`card-panel-timestamp ${item.role}`" type="flex"/>
+                  :class="`card-panel-timestamp ${item.role}`" type="flex"
+                  :style="computePosition('card-panel-timestamp', item.role)">
+            <span>
+              {{ new Date(item.timestamp).toLocaleString(locales, options) }}
+            </span>
+            <el-button
+                title="copy"
+                @click="copyToClipboard(extractTextFromHtml(item.content))"
+                :class="`copy-button ${item.role}`"
+                style="width: 14px; height: 14px; min-width: 14px; min-height: 14px; padding: 0;"
+                icon="el-icon-document-copy"/>
+          </el-row>
           <el-row v-if="item.role !=='wait' && item.role !=='error'" v-html="item.content"
                   :class="`message-content ${item.role}`" justify="start"/>
           <!-- 如果是wait则显示加载条 -->
@@ -274,14 +359,18 @@ export default class ChatPanel extends Vue {
 }
 
 .message-card.user {
+  /*
   margin-right: 5%;
+   */
 }
 
 .message-card.assistant,
 .message-card.wait,
 .message-card.error {
   background-color: #4E8CFF;
+  /*
   margin-left: 5%;
+  */
 }
 
 .card-col {
@@ -289,13 +378,17 @@ export default class ChatPanel extends Vue {
 }
 
 .card-col.user {
+  /*
   justify-content: flex-start;
+   */
 }
 
 .card-col.assistant,
 .card-col.wait,
 .card-col.error {
+  /*
   justify-content: flex-end;
+   */
 }
 
 .card-panel-timestamp {
@@ -305,13 +398,17 @@ export default class ChatPanel extends Vue {
 }
 
 .card-panel-timestamp.user {
+  /*
   justify-content: flex-start;
+   */
 }
 
 .card-panel-timestamp.assistant,
 .card-panel-timestamp.wait,
 .card-panel-timestamp.error {
+  /*
   justify-content: flex-end;
+   */
   color: #d9d9d9;
 }
 
@@ -324,6 +421,7 @@ export default class ChatPanel extends Vue {
   margin: 10px;
   background-color: #f2f5f7;
   border-radius: 10px;
+  flex-shrink: 0; /* 防止被压缩 */
 }
 
 .input-card ::v-deep .el-card__body {
@@ -377,5 +475,43 @@ export default class ChatPanel extends Vue {
 
 .message-content.error p {
   padding: 0 5px 0 5px;
+}
+
+.copy-button {
+  background: transparent;
+  border: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px; /* 调整图标大小 */
+  /* 位置调整 */
+  margin-left: 3px;
+  transform: translateY(1px);
+}
+
+.copy-button.assistant,
+.copy-button.error {
+  color: rgba(255, 255, 255, 1);
+}
+
+.copy-button.assistant:hover,
+.copy-button.error:hover {
+  color: rgb(0, 0, 0);
+}
+
+.message-card:hover .copy-button {
+  opacity: 1;
+}
+
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.messages-container {
+  overflow: auto;
 }
 </style>

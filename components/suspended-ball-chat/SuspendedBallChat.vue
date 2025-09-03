@@ -12,18 +12,23 @@
     </div>
     <div class="panel" v-show="isPanelVisible"
          :style="{ left: panelLeft + 'px', top: panelTop + 'px', width: currentPanelWidth + 'px', height: currentPanelHeight + 'px' }">
-      <div class="resize-top" @mousedown="resizeTop"/>
-      <div class="resize-bottom" @mousedown="resizeBottom"/>
-      <div class="resize-left" @mousedown="resizeLeft"/>
-      <div class="resize-right" @mousedown="resizeRight"/>
-      <!-- 新增四个角落调整区域 -->
-      <div class="resize-top-left" @mousedown="resizeTopLeft"/>
-      <div class="resize-top-right" @mousedown="resizeTopRight"/>
-      <div class="resize-bottom-left" @mousedown="resizeBottomLeft"/>
-      <div class="resize-bottom-right" @mousedown="resizeBottomRight"/>
-      <chat-panel class="chat-panel" :app-name="appName" :domain-name="domainName" :locales="dateLocales"
-                  :options="options"
-                  :url="url"/>
+      <!-- 调整面板结构，将resize控制区与内容区分离 -->
+      <div class="resize-controls">
+        <div class="resize-top" @mousedown="resizeTop"/>
+        <div class="resize-bottom" @mousedown="resizeBottom"/>
+        <div class="resize-left" @mousedown="resizeLeft"/>
+        <div class="resize-right" @mousedown="resizeRight"/>
+        <!-- 新增四个角落调整区域 -->
+        <div class="resize-top-left" @mousedown="resizeTopLeft"/>
+        <div class="resize-top-right" @mousedown="resizeTopRight"/>
+        <div class="resize-bottom-left" @mousedown="resizeBottomLeft"/>
+        <div class="resize-bottom-right" @mousedown="resizeBottomRight"/>
+      </div>
+      <div class="panel-content">
+        <chat-panel class="chat-panel" :app-name="appName" :domain-name="domainName" :locales="dateLocales"
+                    :options="options" :is-left="isLeft"
+                    :url="url"/>
+      </div>
     </div>
   </div>
 </template>
@@ -57,6 +62,7 @@ export default class SuspendBallChat extends Vue {
   @Prop({type: String, default: '/nlweb/query'}) readonly url!: string;
   @Prop({type: String, required: true}) readonly appName!: string;
   @Prop({type: String, required: true}) readonly domainName!: string;
+  @Prop({type: Boolean, default: false}) readonly isLeft!: boolean;
 
   private eventListeners: Array<[EventTarget, string, EventListenerOrEventListenerObject]> = [];
   private ballLeft: number = window.innerWidth - this.radius * 2; // 初始位置
@@ -482,12 +488,34 @@ export default class SuspendBallChat extends Vue {
 .panel {
   display: flex;
   flex-direction: column-reverse;
-  overflow: auto;
+  overflow: hidden; /* 改为hidden */
   position: fixed;
   background: #ffffff;
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   z-index: 9999;
+}
+
+/* 内容区域可滚动 */
+.panel-content {
+  flex: 1;
+  overflow: auto; /* 滚动条移到这里 */
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.resize-controls {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* 确保不影响内容交互 */
+  z-index: 10; /* 确保控制区域在内容之上 */
+}
+
+.resize-controls > div {
+  pointer-events: auto; /* 重新启用控制区域的事件 */
 }
 
 .chat-iframe {

@@ -1,5 +1,7 @@
+export type Role = 'user' | 'assistant' | 'system' | 'wait' | 'error';
+
 export interface ChatMessage {
-    role: 'user' | 'assistant' | 'system' | 'wait' | 'error';
+    role: Role;
     content: string;
     timestamp: number;
 }
