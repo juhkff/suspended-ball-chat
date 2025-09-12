@@ -131,6 +131,7 @@ export default class ChatPanel extends Vue {
       timestamp: -1,
     });
     const startTime = Date.now();
+    this.scrollToBottom();
     this.fetchPromise.then(async (response) => {
       // await new Promise(resolve => setTimeout(resolve, 3000));  // 模拟3s延时
       const endTime = Date.now();
@@ -276,6 +277,15 @@ export default class ChatPanel extends Vue {
     } else {
       return '';
     }
+  }
+
+  private scrollToBottom() {
+    this.$nextTick(() => {
+      const container = this.$el.querySelector('.messages-container');
+      if (container) {
+        container.scrollTop = container.scrollHeight;
+      }
+    });
   }
 }
 </script>
@@ -465,7 +475,10 @@ export default class ChatPanel extends Vue {
 }
 
 .message-content.wait {
-  height: 20px; /* 防止图标大小变动导致出现滚动条 */
+  /* 居中 */
+  display: flex;
+  align-items: center;
+  overflow: hidden;
 }
 
 .message-content.wait p {

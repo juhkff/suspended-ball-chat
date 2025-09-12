@@ -50,6 +50,14 @@
                 "kind": "expression",
                 "type": "string"
               }
+            },
+            {
+              "name": "isLeft",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              },
+              "default": "false"
             }
           ],
           "slots": [
@@ -105,6 +113,14 @@
                 "kind": "expression",
                 "type": "string"
               }
+            },
+            {
+              "name": "isLeft",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              },
+              "default": "false"
             }
           ],
           "slots": [
@@ -200,6 +216,14 @@
                 "kind": "expression",
                 "type": "string"
               }
+            },
+            {
+              "name": "isLeft",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              },
+              "default": "false"
             }
           ],
           "source": {
@@ -282,6 +306,14 @@
                 "kind": "expression",
                 "type": "string"
               }
+            },
+            {
+              "name": "isLeft",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              },
+              "default": "false"
             }
           ],
           "source": {
