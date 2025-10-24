@@ -23,7 +23,6 @@ import 'element-ui/lib/theme-chalk/divider.css';
 import 'element-ui/lib/theme-chalk/input.css';
 import 'element-ui/lib/theme-chalk/row.css';
 import 'element-ui/lib/theme-chalk/col.css';
-import 'element-ui/lib/theme-chalk/icon.css';
 
 @Component({
   name: 'chat-panel',
@@ -306,20 +305,35 @@ export default class ChatPanel extends Vue {
                 title="copy"
                 @click="copyToClipboard(extractTextFromHtml(item.content))"
                 :class="`copy-button ${item.role}`"
-                style="width: 14px; height: 14px; min-width: 14px; min-height: 14px; padding: 0;"
-                icon="el-icon-document-copy"/>
+                style="width: 14px; height: 14px; min-width: 14px; min-height: 14px; padding: 0;">
+              <svg :class="`copy-svg ${item.role}`" viewBox="0 0 1024 1024"
+                   xmlns="http://www.w3.org/2000/svg" width="12" height="13">
+                <path
+                    d="M838.4 68.266667h-512c-46.933333 0-85.333333 36.266667-85.333333 81.066666v38.4H185.6c-46.933333 0-85.333333 38.4-85.333333 85.333334v597.333333c0 46.933333 38.4 85.333333 85.333333 85.333333h512c46.933333 0 85.333333-38.4 85.333333-85.333333v-36.266667h55.466667c46.933333 0 85.333333-38.4 85.333333-85.333333v-597.333333c0-44.8-38.4-83.2-85.333333-83.2z m-98.133333 802.133333c0 23.466667-19.2 42.666667-42.666667 42.666667h-512c-23.466667 0-42.666667-19.2-42.666667-42.666667v-597.333333c0-23.466667 19.2-42.666667 42.666667-42.666667h512c23.466667 0 42.666667 19.2 42.666667 42.666667v597.333333z m140.8-119.466667c0 23.466667-19.2 42.666667-42.666667 42.666667h-55.466667V273.066667c0-46.933333-38.4-85.333333-85.333333-85.333334H283.733333V149.333333c0-21.333333 19.2-38.4 42.666667-38.4h512c23.466667 0 42.666667 19.2 42.666667 42.666667v597.333333z m-450.133334-83.2h-204.8c-12.8 0-21.333333 8.533333-21.333333 21.333334s8.533333 21.333333 21.333333 21.333333h204.8c12.8 0 21.333333-8.533333 21.333334-21.333333s-10.666667-21.333333-21.333334-21.333334z m98.133334-10.666666c-17.066667 0-32 14.933333-32 32s14.933333 32 32 32 32-14.933333 32-32-12.8-32-32-32z m128-234.666667H224c-12.8 0-21.333333 8.533333-21.333333 21.333333s8.533333 21.333333 21.333333 21.333334h433.066667c12.8 0 21.333333-8.533333 21.333333-21.333334s-8.533333-21.333333-21.333333-21.333333z"></path>
+              </svg>
+            </el-button>
           </el-row>
           <el-row v-if="item.role !=='wait' && item.role !=='error'" v-html="item.content"
                   :class="`message-content ${item.role}`" justify="start"/>
           <!-- 如果是wait则显示加载条 -->
           <el-row v-if="item.role === 'wait'" :class="`message-content ${item.role}`">
-            <i class="el-icon-loading"/>
+            <svg class="loading-svg" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"
+                 width="16" height="16">
+              <path
+                  d="M511.882596 287.998081h-0.361244a31.998984 31.998984 0 0 1-31.659415-31.977309v-0.361244c0-0.104761 0.115598-11.722364 0.115598-63.658399V96.000564a31.998984 31.998984 0 1 1 64.001581 0V192.001129c0 52.586273-0.111986 63.88237-0.119211 64.337537a32.002596 32.002596 0 0 1-31.977309 31.659415zM511.998194 959.99842a31.998984 31.998984 0 0 1-31.998984-31.998984v-96.379871c0-51.610915-0.111986-63.174332-0.115598-63.286318s0-0.242033 0-0.361243a31.998984 31.998984 0 0 1 63.997968-0.314283c0 0.455167 0.11921 11.711527 0.11921 64.034093v96.307622a31.998984 31.998984 0 0 1-32.002596 31.998984zM330.899406 363.021212a31.897836 31.897836 0 0 1-22.866739-9.612699c-0.075861-0.075861-8.207461-8.370021-44.931515-45.094076L195.198137 240.429485a31.998984 31.998984 0 0 1 45.256635-45.253022L308.336112 263.057803c37.182834 37.182834 45.090463 45.253022 45.41197 45.578141A31.998984 31.998984 0 0 1 330.899406 363.021212zM806.137421 838.11473a31.901448 31.901448 0 0 1-22.628318-9.374279L715.624151 760.859111c-36.724054-36.724054-45.018214-44.859267-45.097687-44.93874a31.998984 31.998984 0 0 1 44.77618-45.729864c0.32512 0.317895 8.395308 8.229136 45.578142 45.411969l67.88134 67.88134a31.998984 31.998984 0 0 1-22.624705 54.630914zM224.000113 838.11473a31.901448 31.901448 0 0 0 22.628317-9.374279l67.88134-67.88134c36.724054-36.724054 45.021826-44.859267 45.097688-44.93874a31.998984 31.998984 0 0 0-44.776181-45.729864c-0.32512 0.317895-8.395308 8.229136-45.578142 45.411969l-67.88134 67.884953a31.998984 31.998984 0 0 0 22.628318 54.627301zM255.948523 544.058589h-0.361244c-0.104761 0-11.722364-0.115598-63.658399-0.115598H95.942765a31.998984 31.998984 0 1 1 0-64.00158h95.996952c52.586273 0 63.88237 0.111986 64.337538 0.11921a31.998984 31.998984 0 0 1 31.659414 31.97731v0.361244a32.002596 32.002596 0 0 1-31.988146 31.659414zM767.939492 544.058589a32.002596 32.002596 0 0 1-31.995372-31.666639v-0.361244a31.998984 31.998984 0 0 1 31.659415-31.970085c0.455167 0 11.754876-0.11921 64.34115-0.11921h96.000564a31.998984 31.998984 0 0 1 0 64.00158H831.944685c-51.936034 0-63.553638 0.111986-63.665624 0.115598h-0.335957zM692.999446 363.0176a31.998984 31.998984 0 0 1-22.863126-54.381656c0.317895-0.32512 8.229136-8.395308 45.41197-45.578141l67.88134-67.884953A31.998984 31.998984 0 1 1 828.693489 240.429485l-67.892177 67.88134c-31.020013 31.023625-41.644196 41.759794-44.241539 44.393262l-0.697201 0.722488a31.908673 31.908673 0 0 1-22.863126 9.591025z"
+                  fill="#ffffff"></path>
+            </svg>
             <p style="display: inline-block">思考中...</p>
           </el-row>
           <!-- 如果是error则显示错误信息 -->
           <el-row v-if="item.role === 'error'" :class="`message-content ${item.role}`"
                   style="color: orange; font-weight: bold;">
-            <i class="el-icon-error"/>
+            <svg class="error-svg" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"
+                 width="14" height="14">
+              <path
+                  d="M512 0C229.376 0 0 229.376 0 512s229.376 512 512 512 512-229.376 512-512S794.624 0 512 0z m218.624 672.256c15.872 15.872 15.872 41.984 0 57.856-8.192 8.192-18.432 11.776-29.184 11.776s-20.992-4.096-29.184-11.776L512 569.856l-160.256 160.256c-8.192 8.192-18.432 11.776-29.184 11.776s-20.992-4.096-29.184-11.776c-15.872-15.872-15.872-41.984 0-57.856L454.144 512 293.376 351.744c-15.872-15.872-15.872-41.984 0-57.856 15.872-15.872 41.984-15.872 57.856 0L512 454.144l160.256-160.256c15.872-15.872 41.984-15.872 57.856 0 15.872 15.872 15.872 41.984 0 57.856L569.856 512l160.768 160.256z"
+                  fill="orange"></path>
+            </svg>
             <p style="display: inline-block;" v-text="item.content"/>
           </el-row>
         </el-card>
@@ -328,7 +342,8 @@ export default class ChatPanel extends Vue {
     <el-divider class="input-top-divider"/>
     <el-card class="input-card">
       <slot>
-        <el-input type="textarea" autosize clearable resize="none" style="flex: 1" class="card-input"
+        <el-input type="textarea" autosize clearable resize="none" style="flex: 1;"
+                  class="card-input"
                   placeholder="Type your message here..." @keydown.enter.native="onEnter" @keydown.tab.native="onTab"
                   v-model="inputValue"/>
         <el-button @click="processButtonClick" class="ball-chat-submit" circle="circle" size="small"
@@ -339,7 +354,7 @@ export default class ChatPanel extends Vue {
             <path d="M2,21L23,12L2,3V10L17,12L2,14V21Z"/>
           </svg>
           <!-- 停止按钮 SVG 图标 -->
-          <svg v-if="locked" t="1755251798606" class="icon" viewBox="0 0 1024 1024" version="1.1"
+          <svg v-if="locked" t="1755251798606" class="stop-svg" viewBox="0 0 1024 1024" version="1.1"
                xmlns="http://www.w3.org/2000/svg"
                p-id="8782" width="16" height="16">
             <path
@@ -454,6 +469,8 @@ export default class ChatPanel extends Vue {
   background-color: transparent;
   padding: 0;
   border: none;
+  min-height: 21px !important;
+  height: 21px !important;
 }
 
 .message-content {
@@ -474,7 +491,7 @@ export default class ChatPanel extends Vue {
   color: white;
 }
 
-.message-content.wait {
+.message-content.wait, .message-content.error {
   /* 居中 */
   display: flex;
   align-items: center;
@@ -504,14 +521,18 @@ export default class ChatPanel extends Vue {
   transform: translateY(1px);
 }
 
-.copy-button.assistant,
-.copy-button.error {
-  color: rgba(255, 255, 255, 1);
+.copy-svg.assistant,
+.copy-svg.error {
+  fill: rgba(255, 255, 255, 1);
 }
 
-.copy-button.assistant:hover,
-.copy-button.error:hover {
-  color: rgb(0, 0, 0);
+.copy-svg.assistant:hover,
+.copy-svg.error:hover {
+  fill: rgb(0, 0, 0);
+}
+
+.copy-svg.user:hover {
+  fill: deepskyblue;
 }
 
 .message-card:hover .copy-button {
@@ -526,5 +547,37 @@ export default class ChatPanel extends Vue {
 
 .messages-container {
   overflow: auto;
+}
+
+/* 给 svg 添加旋转动画 */
+.loading-svg {
+  animation: spin 1.5s linear infinite;
+  transform-origin: center; /* 围绕中心旋转 */
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-svg path {
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    fill-opacity: 1;
+  }
+  50% {
+    fill-opacity: 0.5;
+  }
+}
+
+svg {
+  flex-shrink: 0; /* 避免被 flex 拉伸 */
 }
 </style>

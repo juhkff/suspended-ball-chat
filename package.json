@@ -5,9 +5,10 @@
     "serve": "vue-cli-service serve",
     "build": "webpack",
     "build:components": "webpack --config webpack.components.config.js",
+    "build:webcomponents": "vue-cli-service build --target lib --name suspended-ball-chat ./web-component.wrapper.js --inline-vue",
     "generate-web-types": "vue-docgen-web-types components/**/*.{vue,js,ts} --outDir lib --output web-types.json",
     "mock-server": "node ./src/mock/mock-server.ts",
-    "package": "rimraf ./lib && npm run build && npm run build:components && npm run generate-web-types"
+    "package": "rimraf ./lib && rimraf ./dist && npm run build && npm run build:components && npm run build:webcomponents && npm run generate-web-types"
   },
   "description": "一个悬浮球AI助手组件库",
   "main": "lib/index.js",
